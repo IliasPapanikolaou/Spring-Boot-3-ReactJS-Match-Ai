@@ -8,6 +8,9 @@ import com.ipap.springboot3reactjsmatchai.profiles.Profile;
 import com.ipap.springboot3reactjsmatchai.profiles.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +25,7 @@ public class SpringBoot3ReactJsMatchAiApplication implements CommandLineRunner {
 
     private final ProfileRepository profileRepository;
     private final ConversationRepository conversationRepository;
+    private final OllamaChatModel chatModel;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringBoot3ReactJsMatchAiApplication.class, args);
@@ -30,6 +34,12 @@ public class SpringBoot3ReactJsMatchAiApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("Running Match AI Application");
+
+        // Open Ai ChatBot
+        ChatResponse response = chatModel.call(
+                new Prompt("Who is Ilias Papanikolaou"));
+
+        System.out.println(response.getResult());
 
         // Delete all test data
         profileRepository.deleteAll();
