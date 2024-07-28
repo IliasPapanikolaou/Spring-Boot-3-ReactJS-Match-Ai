@@ -5,6 +5,7 @@ import com.ipap.springboot3reactjsmatchai.conversations.Conversation;
 import com.ipap.springboot3reactjsmatchai.conversations.ConversationRepository;
 import com.ipap.springboot3reactjsmatchai.profiles.Gender;
 import com.ipap.springboot3reactjsmatchai.profiles.Profile;
+import com.ipap.springboot3reactjsmatchai.profiles.ProfileCreationService;
 import com.ipap.springboot3reactjsmatchai.profiles.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class SpringBoot3ReactJsMatchAiApplication implements CommandLineRunner {
 
     private final ProfileRepository profileRepository;
     private final ConversationRepository conversationRepository;
+    private final ProfileCreationService profileCreationService;
     private final OllamaChatModel chatModel;
 
     public static void main(String[] args) {
@@ -35,17 +37,18 @@ public class SpringBoot3ReactJsMatchAiApplication implements CommandLineRunner {
     public void run(String... args) {
         log.info("Running Match AI Application");
 
-        // Open Ai ChatBot
-        ChatResponse response = chatModel.call(
-                new Prompt("Who is Ilias Papanikolaou"));
+        // Clear all data from DB
+        clearAllData();
 
-        System.out.println(response.getResult());
+        // Interact with Ollama Ai ChatBot
+        // ChatResponse response = chatModel.call(new Prompt("5 famous pirates"));
+        // System.out.println(response.getResult());
 
-        // Delete all test data
-        profileRepository.deleteAll();
-        conversationRepository.deleteAll();
+        // Save all female data from profiles.json to DB and create a default male user profile
+        profileCreationService.saveProfilesToDB();
+        log.info("Profiles count saved to DB: {}", profileRepository.count());
 
-        Profile profile_male = new Profile("1",
+        /*Profile profile_male = new Profile("1",
                 "John", "Rambo", 40, "American", Gender.MALE, "Fighter",
                 "foo_male.jpg", "INTP");
 
@@ -57,10 +60,15 @@ public class SpringBoot3ReactJsMatchAiApplication implements CommandLineRunner {
         profileRepository.save(profile_female);
         profileRepository.findAll().forEach(p -> log.info(p.toString()));
 
-        Conversation conversation = new Conversation("1", profile_male.profileId(),
+        Conversation conversation = new Conversation("1", profile_male.id(),
                 List.of(new ChatMessage("1", "Hello Maria!", LocalDateTime.now())));
 
         conversationRepository.save(conversation);
-        conversationRepository.findAll().forEach(c -> log.info(c.toString()));
+        conversationRepository.findAll().forEach(c -> log.info(c.toString()));*/
+    }
+
+    private void clearAllData() {
+        profileRepository.deleteAll();
+        conversationRepository.deleteAll();
     }
 }

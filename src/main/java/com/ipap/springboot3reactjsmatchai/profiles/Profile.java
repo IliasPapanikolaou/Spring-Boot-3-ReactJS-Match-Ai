@@ -4,9 +4,9 @@ import org.springframework.data.annotation.Id;
 
 public record Profile(
         @Id
-        String profileId,
-        String firstname,
-        String lastname,
+        String id,
+        String firstName,
+        String lastName,
         Integer age,
         String ethnicity,
         Gender gender,
