@@ -4,4 +4,13 @@ spring:
       base-url: http://localhost:11434/
       chat:
         enabled: true
-        model: llama3
+        model: mistral #llama3
+
+startup-actions:
+  initializeProfiles: true
+
+# User's profile
+matchAi:
+  lookingForGender: woman
+  character:
+    user: "{id:'user', firstName:'John', lastName:'Rambo', age:40, ethnicity:'American', gender:'MALE', bio:'Mercenary soldier. Likes guns, bows and explosives. Favorites are two MG3, one on each hand. Best friend is Chuck Norris', imageUrl:'', myersBriggsPersonalityType:'INTP'}"
