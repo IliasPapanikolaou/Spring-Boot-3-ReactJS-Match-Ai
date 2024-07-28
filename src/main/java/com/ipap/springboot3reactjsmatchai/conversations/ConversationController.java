@@ -1,5 +1,6 @@
 package com.ipap.springboot3reactjsmatchai.conversations;
 
+import com.ipap.springboot3reactjsmatchai.profiles.Profile;
 import com.ipap.springboot3reactjsmatchai.profiles.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ public class ConversationController {
 
     private final ConversationRepository conversationRepository;
     private final ProfileRepository profileRepository;
+    private final ConversationService conversationService;
 
     @PostMapping
     public ResponseEntity<Conversation> createNewConversation(@RequestBody CreateConversationRequest request) {
@@ -48,13 +50,21 @@ public class ConversationController {
 
         // Search conversation by conversationId
         Conversation conversation = conversationRepository.findById(conversationId).orElseThrow(() -> {
-            log.warn("Conversation with id {} not found", conversationId);
+            log.warn("Could not find conversation with id: {}", conversationId);
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Unable to find conversation with id " + conversationId);
         });
 
+        // Search for match profileId
+        String matchProfileId = conversation.profileId();
+        Profile matchProfile = profileRepository.findById(matchProfileId).orElseThrow(() -> {
+            log.warn("Profile with profile id {} not found", chatMessage.authorId());
+            return new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Unable to find profile with id " + chatMessage.authorId());
+        });
+
         // Search if chatMessage authorId is valid
-        profileRepository.findById(chatMessage.authorId()).orElseThrow(() -> {
+        Profile userProfile = profileRepository.findById(chatMessage.authorId()).orElseThrow(() -> {
             log.warn("Profile with author id {} not found", chatMessage.authorId());
             return new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Unable to find author with id " + chatMessage.authorId());
@@ -63,12 +73,19 @@ public class ConversationController {
         // TODO: Need to validate that the author of a message happens to be only the profile associated with the message user
 
         // Add message to conversation
-        ChatMessage chatMessageWithTime =
-                new ChatMessage(chatMessage.authorId(), chatMessage.messageText(), LocalDateTime.now());
+        ChatMessage chatMessageWithTime = new ChatMessage(
+                chatMessage.authorId(),
+                chatMessage.messageText(),
+                LocalDateTime.now());
+
         conversation.messages().add(chatMessageWithTime);
 
+        // Add response message from LLM
+        Conversation conversationWithAiResponse = conversationService.generateProfleResponseConversation(
+                conversation, matchProfile, userProfile);
+
         // Persist conversation
-        Conversation savedConversation = conversationRepository.save(conversation);
+        Conversation savedConversation = conversationRepository.save(conversationWithAiResponse);
 
         return new ResponseEntity<>(savedConversation, HttpStatus.OK);
     }

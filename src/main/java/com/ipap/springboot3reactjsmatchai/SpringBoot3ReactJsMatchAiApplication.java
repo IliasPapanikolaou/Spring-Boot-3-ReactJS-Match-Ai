@@ -20,7 +20,6 @@ public class SpringBoot3ReactJsMatchAiApplication implements CommandLineRunner {
     private final ConversationRepository conversationRepository;
     private final MatchRepository matchRepository;
     private final ProfileCreationService profileCreationService;
-    private final OllamaChatModel chatModel;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringBoot3ReactJsMatchAiApplication.class, args);
@@ -32,10 +31,6 @@ public class SpringBoot3ReactJsMatchAiApplication implements CommandLineRunner {
 
         // Clear all data from DB
         clearAllData();
-
-        // Interact with Ollama Ai ChatBot
-        // ChatResponse response = chatModel.call(new Prompt("5 famous pirates"));
-        // System.out.println(response.getResult());
 
         // Save all female data from profiles.json to DB and create a default male user profile
         profileCreationService.saveProfilesToDB();
