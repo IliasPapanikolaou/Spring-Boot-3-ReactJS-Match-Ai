@@ -40,24 +40,6 @@ public class SpringBoot3ReactJsMatchAiApplication implements CommandLineRunner {
         // Save all female data from profiles.json to DB and create a default male user profile
         profileCreationService.saveProfilesToDB();
         log.info("Profiles count saved to DB: {}", profileRepository.count());
-
-        /*Profile profile_male = new Profile("1",
-                "John", "Rambo", 40, "American", Gender.MALE, "Fighter",
-                "foo_male.jpg", "INTP");
-
-        Profile profile_female = new Profile("2",
-                "Maria", "Spendings", 30, "American", Gender.FEMALE, "Shopping",
-                "foo_female.jpg", "INTP");
-
-        profileRepository.save(profile_male);
-        profileRepository.save(profile_female);
-        profileRepository.findAll().forEach(p -> log.info(p.toString()));
-
-        Conversation conversation = new Conversation("1", profile_male.id(),
-                List.of(new ChatMessage("1", "Hello Maria!", LocalDateTime.now())));
-
-        conversationRepository.save(conversation);
-        conversationRepository.findAll().forEach(c -> log.info(c.toString()));*/
     }
 
     private void clearAllData() {
