@@ -1,23 +1,15 @@
 package com.ipap.springboot3reactjsmatchai;
 
-import com.ipap.springboot3reactjsmatchai.conversations.ChatMessage;
-import com.ipap.springboot3reactjsmatchai.conversations.Conversation;
 import com.ipap.springboot3reactjsmatchai.conversations.ConversationRepository;
-import com.ipap.springboot3reactjsmatchai.profiles.Gender;
-import com.ipap.springboot3reactjsmatchai.profiles.Profile;
+import com.ipap.springboot3reactjsmatchai.matches.MatchRepository;
 import com.ipap.springboot3reactjsmatchai.profiles.ProfileCreationService;
 import com.ipap.springboot3reactjsmatchai.profiles.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +18,7 @@ public class SpringBoot3ReactJsMatchAiApplication implements CommandLineRunner {
 
     private final ProfileRepository profileRepository;
     private final ConversationRepository conversationRepository;
+    private final MatchRepository matchRepository;
     private final ProfileCreationService profileCreationService;
     private final OllamaChatModel chatModel;
 
@@ -70,5 +63,6 @@ public class SpringBoot3ReactJsMatchAiApplication implements CommandLineRunner {
     private void clearAllData() {
         profileRepository.deleteAll();
         conversationRepository.deleteAll();
+        matchRepository.deleteAll();
     }
 }

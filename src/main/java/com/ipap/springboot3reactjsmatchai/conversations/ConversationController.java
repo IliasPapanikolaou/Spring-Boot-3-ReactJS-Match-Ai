@@ -31,7 +31,7 @@ public class ConversationController {
                             "Profile with id " + request.profileId + " not found");
                 });
 
-        // Else continue creating conversation
+        // Continue creating conversation
         Conversation conversation = new Conversation(UUID.randomUUID().toString(),
                 request.profileId, Collections.emptyList());
 
